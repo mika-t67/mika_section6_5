@@ -52,3 +52,12 @@ npm run dev
 ### 動作確認
 
 `http://localhost:3001/health` で `{"status":"ok"}` が返ればOK
+
+### ⚠️ 注意
+- `docker-compose up -d` でMySQLが**完全に起動してから**マイグレーションを実行してください
+- `backend/.env` の `DATABASE_URL` が以下と一致していることを確認してください
+  - ホスト: `localhost`
+  - ポート: `3306`
+  - DB名: `portfolio_db`
+  - ユーザー・パスワード: `docker-compose.yml` の設定と同じ
+- MySQLの起動確認は `docker ps` で `portfolio_db` が `Up` になっていることを確認
