@@ -1,5 +1,7 @@
 // src/components/sections/ContactSection.tsx
 
+import Link from 'next/link'
+
 export default function ContactSection() {
   return (
     <section className="relative px-6 py-24 md:px-16">
@@ -9,8 +11,7 @@ export default function ContactSection() {
         style={{ borderRadius: '40% 60% 60% 40% / 40% 60% 40% 60%' }}
       />
 
-      <div className="relative z-10 mx-auto max-w-xl space-y-12">
-        {/* セクションタイトル */}
+      <div className="relative z-10 mx-auto max-w-xl space-y-10">
         <div className="space-y-3">
           <p className="text-sm tracking-[0.3em] text-stone-400 uppercase">Contact</p>
           <h2 className="text-3xl font-light text-stone-800">お問い合わせ</h2>
@@ -19,40 +20,12 @@ export default function ContactSection() {
           </p>
         </div>
 
-        {/* フォーム（現時点は見た目のみ） */}
-        <div className="space-y-6">
-          <div className="space-y-2">
-            <label className="text-xs tracking-widest text-stone-400 uppercase">Name</label>
-            <input
-              type="text"
-              placeholder="お名前"
-              className="w-full border-b border-stone-200 bg-transparent py-3 text-sm text-stone-700 placeholder-stone-300 outline-none transition focus:border-stone-500"
-            />
-          </div>
-          <div className="space-y-2">
-            <label className="text-xs tracking-widest text-stone-400 uppercase">Email</label>
-            <input
-              type="email"
-              placeholder="メールアドレス"
-              className="w-full border-b border-stone-200 bg-transparent py-3 text-sm text-stone-700 placeholder-stone-300 outline-none transition focus:border-stone-500"
-            />
-          </div>
-          <div className="space-y-2">
-            <label className="text-xs tracking-widest text-stone-400 uppercase">Message</label>
-            <textarea
-              rows={4}
-              placeholder="メッセージ"
-              className="w-full resize-none border-b border-stone-200 bg-transparent py-3 text-sm text-stone-700 placeholder-stone-300 outline-none transition focus:border-stone-500"
-            />
-          </div>
-
-          <button
-            type="button"
-            className="mt-4 rounded-full border border-stone-300 px-10 py-3 text-sm tracking-widest text-stone-600 transition hover:bg-stone-800 hover:text-white"
-          >
-            Send
-          </button>
-        </div>
+        <Link
+          href="/contact"
+          className="inline-block rounded-full border border-stone-300 px-10 py-3 text-sm tracking-widest text-stone-600 transition hover:bg-stone-800 hover:text-white"
+        >
+          お問い合わせはこちら →
+        </Link>
       </div>
     </section>
   )
