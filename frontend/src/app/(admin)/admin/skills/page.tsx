@@ -12,7 +12,7 @@ export default function AdminSkillsPage() {
 
   const handleAdd = () => {
     if (!newSkill.name.trim()) return
-    const id = Math.max(...skills.map((s) => s.id)) + 1
+    const id = skills.length > 0 ? Math.max(...skills.map((s) => s.id)) + 1 : 1
     setSkills((prev) => [...prev, { ...newSkill, id }])
     setNewSkill({ name: '', category: 'frontend', level: 3 })
   }

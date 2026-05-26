@@ -12,7 +12,7 @@ export default function AdminWorksPage() {
 
   const handleAdd = () => {
     if (!newWork.title.trim()) return
-    const id = Math.max(...works.map((w) => w.id)) + 1
+    const id = works.length > 0 ? Math.max(...works.map((w) => w.id)) + 1 : 1
     setWorks((prev) => [
       ...prev,
       {
