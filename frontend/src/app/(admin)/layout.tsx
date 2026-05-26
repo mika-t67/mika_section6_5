@@ -11,7 +11,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   return (
     <div className="flex min-h-screen bg-zinc-50 text-zinc-800">
       {/* サイドバー */}
-      <aside className="w-56 shrink-0 border-r border-zinc-200 bg-white px-4 py-8">
+      <aside className="flex w-56 shrink-0 flex-col border-r border-zinc-200 bg-white px-4 py-8">
         <p className="mb-8 px-2 text-xs font-semibold tracking-widest text-zinc-400 uppercase">
           Admin
         </p>
