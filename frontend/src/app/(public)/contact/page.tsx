@@ -31,6 +31,7 @@ export default function ContactPage() {
 
     // 仮: 1秒後に成功扱い
     await new Promise((r) => setTimeout(r, 1000))
+    setForm({ name: '', email: '', message: '' }) 
     setStatus('success')
   }
 
