@@ -8,17 +8,23 @@ datasource db {
 }
 
 model Profile {
-  id        Int      @id @default(autoincrement())
-  name      String
-  bio       String   @db.Text
-  image     Bytes?
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id         Int      @id @default(autoincrement())
+  name       String
+  nameEn     String?
+  role       String?
+  bio        String   @db.Text
+  avatarUrl  String?
+  email      String?
+  githubUrl  String?
+  twitterUrl String?
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
 }
 
 model Skill {
   id        Int      @id @default(autoincrement())
   name      String
+  category  String
   level     Int
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -28,7 +34,10 @@ model Achievement {
   id          Int      @id @default(autoincrement())
   title       String
   description String   @db.Text
-  image       Bytes?
+  imageUrl    String?
+  imageAlt    String?  
+  tags        String?
+  url         String?
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 }
