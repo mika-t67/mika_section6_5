@@ -91,3 +91,71 @@ NEXT_PUBLIC_FIREBASE_APP_ID=
 - http://localhost:3000/admin にアクセス → ログインページにリダイレクト
 - ログイン成功 → ダッシュボードに遷移
 - サイドバーのログアウトボタンでログアウト
+
+---
+
+## バックエンドAPI（issue #8）
+
+### 使用技術
+- Express + Prisma + MySQL
+- Cloudinary（画像アップロード）
+- multer（ファイル受け取り）
+
+### ディレクトリ構成
+```
+backend/src/
+├── index.ts              # エントリーポイント・ルーティング登録
+├── lib/
+│   ├── prisma.ts         # PrismaClient共通化
+│   └── cloudinary.ts     # Cloudinary初期設定
+├── middleware/
+│   └── upload.ts         # multer画像アップロードミドルウェア
+└── routes/
+    ├── profile.ts        # GET/POST/PUT /profile
+    ├── skills.ts         # GET/POST/PUT/DELETE /skills
+    └── achievements.ts   # GET/POST/PUT/DELETE /achievements
+```
+
+### 環境変数（.env）
+```
+DATABASE_URL=mysql://root:password@localhost:3306/portfolio_db
+PORT=3001
+CLOUDINARY_CLOUD_NAME=
+CLOUDINARY_API_KEY=
+CLOUDINARY_API_SECRET=
+```
+
+### 動作確認
+```bash
+# ルートディレクトリで（MySQL起動）
+docker-compose up -d
+
+# backendディレクトリで
+cd backend
+npm run dev
+```
+
+| エンドポイント | メソッド | 説明 |
+|---|---|---|
+| /health | GET | ヘルスチェック |
+| /profile | GET | プロフィール取得 |
+| /profile | POST | プロフィール作成（画像アップロード可） |
+| /profile/:id | PUT | プロフィール更新（画像アップロード可） |
+| /skills | GET | スキル一覧取得 |
+| /skills | POST | スキル作成 |
+| /skills/:id | PUT | スキル更新 |
+| /skills/:id | DELETE | スキル削除 |
+| /achievements | GET | 実績一覧取得 |
+| /achievements | POST | 実績作成（画像アップロード可） |
+| /achievements/:id | PUT | 実績更新（画像アップロード可） |
+| /achievements/:id | DELETE | 実績削除 |
+
+
+### 確認方法
+```bash
+curl http://localhost:3001/health
+# → {"status":"ok"}
+
+curl http://localhost:3001/skills
+# → []（初期状態は空配列）
+```
