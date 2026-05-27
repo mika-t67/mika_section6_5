@@ -61,3 +61,33 @@ npm run dev
   - DB名: `portfolio_db`
   - ユーザー・パスワード: `docker-compose.yml` の設定と同じ
 - MySQLの起動確認は `docker ps` で `portfolio_db` が `Up` になっていることを確認
+
+---
+
+## トップページ（issue #4）
+
+### 構成
+- `src/types/index.ts` — 型定義（Profile / Skill / Achievement / Contact）
+- `src/lib/mockData.ts` — モックデータ
+- `src/app/(public)/page.tsx` — トップページ
+- `src/components/sections/` — 各セクションコンポーネント
+
+### 確認方法
+http://localhost:3000 でトップページを確認
+
+---
+
+## Firebase認証（issue #7）
+
+### 必要な環境変数（.env.local）
+NEXT_PUBLIC_FIREBASE_API_KEY=
+NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN=
+NEXT_PUBLIC_FIREBASE_PROJECT_ID=
+NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET=
+NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID=
+NEXT_PUBLIC_FIREBASE_APP_ID=
+
+### 確認方法
+- http://localhost:3000/admin にアクセス → ログインページにリダイレクト
+- ログイン成功 → ダッシュボードに遷移
+- サイドバーのログアウトボタンでログアウト
