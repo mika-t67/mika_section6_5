@@ -1,4 +1,8 @@
+'use client'
+
 import Link from 'next/link'
+import { useRouter } from 'next/navigation'
+import { signOut } from '@/lib/auth'
 
 const navItems = [
   { label: 'ダッシュボード', href: '/admin' },
@@ -8,6 +12,13 @@ const navItems = [
 ]
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
+  const router = useRouter()
+
+  const handleSignOut = async () => {
+    await signOut()
+    router.push('/admin/login')
+  }
+
   return (
     <div className="flex min-h-screen bg-zinc-50 text-zinc-800">
       {/* サイドバー */}
@@ -27,14 +38,20 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
           ))}
         </nav>
 
-        {/* トップページへのリンク */}
-        <div className="mt-auto pt-16">
+        <div className="mt-auto space-y-1 pt-16">
           <Link
             href="/"
             className="block px-3 py-2 text-xs text-zinc-400 transition hover:text-zinc-600"
           >
             ← サイトを見る
           </Link>
+          <button
+            type="button"
+            onClick={handleSignOut}
+            className="block w-full rounded-lg px-3 py-2 text-left text-xs text-zinc-400 transition hover:bg-zinc-100 hover:text-zinc-600"
+          >
+            ログアウト
+          </button>
         </div>
       </aside>
 
