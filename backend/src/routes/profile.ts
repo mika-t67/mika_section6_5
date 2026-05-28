@@ -19,8 +19,11 @@ router.get('/', async (req, res) => {
  
       const profile = await prisma.profile.findFirst()
 
-      // nullでもキャッシュに保存（未作成状態も統一して扱う）
-      await redis.set(CACHE_KEY, JSON.stringify(profile ?? null), 'EX', CACHE_TTL)
+      // プロフィールが存在する場合のみキャッシュに保存
+      // 未作成時はキャッシュしないことで、作成後すぐに正しいデータが返るようにする
+      if (profile) {
+        await redis.set(CACHE_KEY, JSON.stringify(profile), 'EX', CACHE_TTL)
+      }
 
       res.json(profile)
     } catch (error) {
