@@ -1,35 +1,61 @@
 'use client'
 
-// src/app/(admin)/admin/works/page.tsx
-
-import { useState } from 'react'
-import { mockAchievements } from '@/lib/mockData'
+import { useState, useEffect } from 'react'
+import { getAchievements, createAchievement, deleteAchievement } from '@/lib/api'
 import { Achievement } from '@/types'
 
 export default function AdminWorksPage() {
-  const [works, setWorks] = useState<Achievement[]>(mockAchievements)
-  const [newWork, setNewWork] = useState({ title: '', description: '', tags: '', url: '' })
+  const [works, setWorks] = useState<Achievement[]>([])
+  const [loading, setLoading] = useState(true)
+  const [newWork, setNewWork] = useState({ title: '', description: '', tags: '', url: '', imageAlt: '' })
+  const [imageFile, setImageFile] = useState<File | null>(null)
+  const [saving, setSaving] = useState(false)
 
-  const handleAdd = () => {
-    if (!newWork.title.trim()) return
-    const id = works.length > 0 ? Math.max(...works.map((w) => w.id)) + 1 : 1
-    setWorks((prev) => [
-      ...prev,
-      {
-        id,
-        title: newWork.title,
-        description: newWork.description,
-        imageUrl: '/images/works/work1.svg',
-        tags: newWork.tags.split(',').map((t) => t.trim()).filter(Boolean),
-        url: newWork.url || undefined,
-        createdAt: new Date().toISOString().slice(0, 10),
-      },
-    ])
-    setNewWork({ title: '', description: '', tags: '', url: '' })
+  useEffect(() => {
+    fetchWorks()
+  }, [])
+
+  const fetchWorks = async () => {
+    try {
+      const data = await getAchievements()
+      setWorks(data)
+    } catch (error) {
+      console.error('実績取得失敗:', error)
+    } finally {
+      setLoading(false)
+    }
   }
 
-  const handleDelete = (id: number) => {
-    setWorks((prev) => prev.filter((w) => w.id !== id))
+  const handleAdd = async () => {
+    if (!newWork.title.trim()) return
+    setSaving(true)
+    try {
+      const formData = new FormData()
+      formData.append('title', newWork.title)
+      formData.append('description', newWork.description)
+      formData.append('tags', newWork.tags)
+      formData.append('url', newWork.url)
+      formData.append('imageAlt', newWork.imageAlt)
+      if (imageFile) formData.append('image', imageFile)
+
+      await createAchievement(formData)
+      setNewWork({ title: '', description: '', tags: '', url: '', imageAlt: '' })
+      setImageFile(null)
+      await fetchWorks()
+    } catch (error) {
+      console.error('実績追加失敗:', error)
+    } finally {
+      setSaving(false)
+    }
+  }
+
+  const handleDelete = async (id: number) => {
+    try {
+      await deleteAchievement(id)
+      await fetchWorks()
+    } catch (error) {
+      console.error('実績削除失敗:', error)
+    }
   }
 
   return (
@@ -47,6 +73,7 @@ export default function AdminWorksPage() {
             { label: 'タイトル', key: 'title', placeholder: 'ポートフォリオサイト' },
             { label: 'URL（任意）', key: 'url', placeholder: 'https://example.com' },
             { label: 'タグ（カンマ区切り）', key: 'tags', placeholder: 'React, TypeScript' },
+            { label: '画像の説明（alt）', key: 'imageAlt', placeholder: 'ポートフォリオサイトのスクリーンショット' },
           ].map((f) => (
             <div key={f.key} className="space-y-1">
               <label className="text-xs tracking-widest text-zinc-400 uppercase">{f.label}</label>
@@ -69,46 +96,62 @@ export default function AdminWorksPage() {
               className="w-full resize-none rounded-lg border border-zinc-200 px-3 py-2 text-sm text-zinc-700 outline-none focus:border-zinc-400"
             />
           </div>
+          <div className="space-y-1 sm:col-span-2">
+            <label className="text-xs tracking-widest text-zinc-400 uppercase">画像</label>
+            <input
+              type="file"
+              accept="image/*"
+              onChange={(e) => setImageFile(e.target.files?.[0] ?? null)}
+              className="w-full text-sm text-zinc-500"
+            />
+          </div>
         </div>
         <button
           type="button"
           onClick={handleAdd}
-          className="rounded-lg bg-zinc-800 px-5 py-2 text-sm text-white transition hover:bg-zinc-700"
+          disabled={saving}
+          className="rounded-lg bg-zinc-800 px-5 py-2 text-sm text-white transition hover:bg-zinc-700 disabled:opacity-50"
         >
-          追加
+          {saving ? '追加中...' : '追加'}
         </button>
       </div>
 
       {/* 実績一覧 */}
       <div className="rounded-2xl border border-zinc-200 bg-white">
-        <table className="w-full text-sm">
-          <thead>
-            <tr className="border-b border-zinc-100 text-left text-xs tracking-widest text-zinc-400 uppercase">
-              <th className="px-6 py-4">タイトル</th>
-              <th className="px-6 py-4">タグ</th>
-              <th className="px-6 py-4">日付</th>
-              <th className="px-6 py-4"></th>
-            </tr>
-          </thead>
-          <tbody>
-            {works.map((work) => (
-              <tr key={work.id} className="border-b border-zinc-50 last:border-0">
-                <td className="px-6 py-4 text-zinc-700">{work.title}</td>
-                <td className="px-6 py-4 text-zinc-400">{work.tags.join(', ')}</td>
-                <td className="px-6 py-4 text-zinc-400">{work.createdAt}</td>
-                <td className="px-6 py-4 text-right">
-                  <button
-                    type="button"
-                    onClick={() => handleDelete(work.id)}
-                    className="text-xs text-red-400 transition hover:text-red-600"
-                  >
-                    削除
-                  </button>
-                </td>
+        {loading ? (
+          <p className="px-6 py-8 text-sm text-zinc-400">読み込み中...</p>
+        ) : works.length === 0 ? (
+          <p className="px-6 py-8 text-sm text-zinc-400">実績がありません</p>
+        ) : (
+          <table className="w-full text-sm">
+            <thead>
+              <tr className="border-b border-zinc-100 text-left text-xs tracking-widest text-zinc-400 uppercase">
+                <th className="px-6 py-4">タイトル</th>
+                <th className="px-6 py-4">タグ</th>
+                <th className="px-6 py-4">日付</th>
+                <th className="px-6 py-4"></th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {works.map((work) => (
+                <tr key={work.id} className="border-b border-zinc-50 last:border-0">
+                  <td className="px-6 py-4 text-zinc-700">{work.title}</td>
+                  <td className="px-6 py-4 text-zinc-400">{work.tags}</td>
+                  <td className="px-6 py-4 text-zinc-400">{work.createdAt?.slice(0, 10)}</td>
+                  <td className="px-6 py-4 text-right">
+                    <button
+                      type="button"
+                      onClick={() => handleDelete(work.id)}
+                      className="text-xs text-red-400 transition hover:text-red-600"
+                    >
+                      削除
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        )}
       </div>
     </div>
   )

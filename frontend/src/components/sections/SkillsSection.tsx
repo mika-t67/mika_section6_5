@@ -17,14 +17,12 @@ const categories: Skill['category'][] = ['frontend', 'backend', 'design', 'other
 
 export default function SkillsSection({ skills }: Props) {
   return (
-    <section className="px-6 py-24 md:px-16">
+    <section className="bg-[#f4f3f0] px-6 py-24 md:px-16">
       <div className="mx-auto max-w-5xl">
-        {/* セクションタイトル */}
         <div className="mb-16 space-y-3">
           <p className="text-sm tracking-[0.3em] text-stone-400 uppercase">Skills</p>
           <h2 className="text-3xl font-light text-stone-800">できること</h2>
         </div>
-
         <div className="space-y-12">
           {categories.map((cat) => {
             const filtered = skills.filter((s) => s.category === cat)
