@@ -1,9 +1,8 @@
 'use client'
 
-// src/app/(public)/contact/page.tsx
-
 import { useState } from 'react'
 import Link from 'next/link'
+import { createContact } from '@/lib/api'
 
 type FormState = {
   name: string
@@ -16,23 +15,30 @@ type Status = 'idle' | 'sending' | 'success' | 'error'
 export default function ContactPage() {
   const [form, setForm] = useState<FormState>({ name: '', email: '', message: '' })
   const [status, setStatus] = useState<Status>('idle')
+  const [errorMessage, setErrorMessage] = useState('')
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }))
+    setStatus('idle')
+    setErrorMessage('') 
   }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setStatus('sending')
+    setErrorMessage('')
 
-    // TODO: バックエンドAPI繋ぎ込み時にここを実装
-    // const res = await fetch('/api/contact', { method: 'POST', body: JSON.stringify(form) })
-    console.log('送信データ:', form)
-
-    // 仮: 1秒後に成功扱い
-    await new Promise((r) => setTimeout(r, 1000))
-    setForm({ name: '', email: '', message: '' }) 
-    setStatus('success')
+    try {
+      await createContact(form)
+      setForm({ name: '', email: '', message: '' })
+      setStatus('success')
+    } catch (err) {
+      setStatus('error')
+      const axiosError = err as any
+      setErrorMessage(
+       axiosError?.response?.data?.error || '送信に失敗しました。時間をおいて再度お試しください。'
+      )
+    }
   }
 
   return (
@@ -75,7 +81,6 @@ export default function ContactPage() {
               </Link>
             </div>
           ) : (
-            /* フォーム */
             <form onSubmit={handleSubmit} className="space-y-8">
               <div className="space-y-2">
                 <label className="text-xs tracking-widest text-stone-400 uppercase">Name</label>
@@ -116,9 +121,9 @@ export default function ContactPage() {
                 />
               </div>
 
-              {status === 'error' && (
-                <p className="text-xs text-red-400">送信に失敗しました。再度お試しください。</p>
-              )}
+                {status === 'error' && (
+                  <p className="text-xs text-red-400">{errorMessage}</p>
+                )}
 
               <button
                 type="submit"
