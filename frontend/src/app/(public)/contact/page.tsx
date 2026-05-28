@@ -15,6 +15,7 @@ type Status = 'idle' | 'sending' | 'success' | 'error'
 export default function ContactPage() {
   const [form, setForm] = useState<FormState>({ name: '', email: '', message: '' })
   const [status, setStatus] = useState<Status>('idle')
+  const [errorMessage, setErrorMessage] = useState('')
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }))
@@ -31,6 +32,10 @@ export default function ContactPage() {
       setStatus('success')
     } catch (err) {
       setStatus('error')
+      const axiosError = err as any
+      setErrorMessage(
+       axiosError?.response?.data?.error || '送信に失敗しました。時間をおいて再度お試しください。'
+      )
     }
   }
 
@@ -114,9 +119,9 @@ export default function ContactPage() {
                 />
               </div>
 
-              {status === 'error' && (
-                <p className="text-xs text-red-400">送信に失敗しました。再度お試しください。</p>
-              )}
+                {status === 'error' && (
+                  <p className="text-xs text-red-400">{errorMessage}</p>
+                )}
 
               <button
                 type="submit"
