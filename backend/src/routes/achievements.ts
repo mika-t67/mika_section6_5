@@ -2,13 +2,26 @@ import { Router } from 'express'
 import prisma from '../lib/prisma'
 import cloudinary from '../lib/cloudinary'
 import upload from '../middleware/upload'
+import redis from '../lib/redis'
  
 const router = Router()
+const CACHE_KEY = 'achievements'
+const CACHE_TTL = 60 * 60 // 1時間
  
 // GET /achievements
 router.get('/', async (req, res) => {
   try {
+    // キャッシュ確認
+    const cached = await redis.get(CACHE_KEY)
+    if (cached) {
+      return res.json(JSON.parse(cached))
+    }
+ 
     const achievements = await prisma.achievement.findMany({ orderBy: { createdAt: 'desc' } })
+ 
+    // キャッシュに保存
+    await redis.set(CACHE_KEY, JSON.stringify(achievements), 'EX', CACHE_TTL)
+ 
     res.json(achievements)
   } catch (error) {
     res.status(500).json({ error: '実績の取得に失敗しました' })
@@ -21,7 +34,6 @@ router.post('/', upload.single('image'), async (req, res) => {
     const { title, description, tags, url, imageAlt } = req.body
     let imageUrl: string | undefined
  
-    //画像が送られてきた場合だけ実行
     if (req.file) {
       const result = await new Promise<string>((resolve, reject) => {
         cloudinary.uploader.upload_stream(
@@ -35,10 +47,13 @@ router.post('/', upload.single('image'), async (req, res) => {
       imageUrl = result
     }
  
-    //DB保存 Achievement 作成
     const achievement = await prisma.achievement.create({
       data: { title, description, tags, url, imageUrl, imageAlt },
     })
+ 
+    // キャッシュ削除
+    await redis.del(CACHE_KEY)
+ 
     res.status(201).json(achievement)
   } catch (error) {
     res.status(500).json({ error: '実績の作成に失敗しました' })
@@ -48,13 +63,11 @@ router.post('/', upload.single('image'), async (req, res) => {
 // PUT /achievements/:id
 router.put('/:id', upload.single('image'), async (req, res) => {
   try {
-    // ID validation
     const id = parseInt(req.params.id as string)
     if (isNaN(id)) {
       return res.status(400).json({ error: '無効なIDです' })
     }
  
-    // 存在確認
     const existing = await prisma.achievement.findUnique({ where: { id } })
     if (!existing) {
       return res.status(404).json({ error: '実績が存在しません' })
@@ -83,6 +96,10 @@ router.put('/:id', upload.single('image'), async (req, res) => {
         ...(imageUrl && { imageUrl }),
       },
     })
+ 
+    // キャッシュ削除
+    await redis.del(CACHE_KEY)
+ 
     res.json(achievement)
   } catch (error) {
     res.status(500).json({ error: '実績の更新に失敗しました' })
@@ -92,19 +109,21 @@ router.put('/:id', upload.single('image'), async (req, res) => {
 // DELETE /achievements/:id
 router.delete('/:id', async (req, res) => {
   try {
-    // ID validation
-    const id = parseInt(req.params.id)
+    const id = parseInt(req.params.id as string)
     if (isNaN(id)) {
       return res.status(400).json({ error: '無効なIDです' })
     }
  
-    // 存在確認
     const existing = await prisma.achievement.findUnique({ where: { id } })
     if (!existing) {
       return res.status(404).json({ error: '実績が存在しません' })
     }
  
     await prisma.achievement.delete({ where: { id } })
+ 
+    // キャッシュ削除
+    await redis.del(CACHE_KEY)
+ 
     res.json({ message: '削除しました' })
   } catch (error) {
     res.status(500).json({ error: '実績の削除に失敗しました' })
