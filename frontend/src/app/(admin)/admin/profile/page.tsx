@@ -1,24 +1,91 @@
 'use client'
 
+import { useState, useEffect } from 'react'
+import { getProfile, createProfile, updateProfile } from '@/lib/api'
 
-import { useState } from 'react'
-import { mockProfile } from '@/lib/mockData'
+type ProfileForm = {
+  name: string
+  nameEn: string
+  role: string
+  bio: string
+  email: string
+  githubUrl: string
+  twitterUrl: string
+}
+
+const initialForm: ProfileForm = {
+  name: '',
+  nameEn: '',
+  role: '',
+  bio: '',
+  email: '',
+  githubUrl: '',
+  twitterUrl: '',
+}
 
 export default function AdminProfilePage() {
-  const [form, setForm] = useState(mockProfile)
+  const [profileId, setProfileId] = useState<number | null>(null)
+  const [form, setForm] = useState<ProfileForm>(initialForm)
+  const [avatarFile, setAvatarFile] = useState<File | null>(null)
+  const [loading, setLoading] = useState(true)
+  const [saving, setSaving] = useState(false)
   const [saved, setSaved] = useState(false)
+
+  useEffect(() => {
+    fetchProfile()
+  }, [])
+
+  const fetchProfile = async () => {
+    try {
+      const data = await getProfile()
+      if (data) {
+        setProfileId(data.id)
+        setForm({
+          name: data.name ?? '',
+          nameEn: data.nameEn ?? '',
+          role: data.role ?? '',
+          bio: data.bio ?? '',
+          email: data.email ?? '',
+          githubUrl: data.githubUrl ?? '',
+          twitterUrl: data.twitterUrl ?? '',
+        })
+      }
+    } catch (error) {
+      console.error('プロフィール取得失敗:', error)
+    } finally {
+      setLoading(false)
+    }
+  }
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }))
     setSaved(false)
   }
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    // TODO: API繋ぎ込み時に実装
-    console.log('保存データ:', form)
-    setSaved(true)
+    setSaving(true)
+
+    try {
+      const formData = new FormData()
+      Object.entries(form).forEach(([key, value]) => formData.append(key, value))
+      if (avatarFile) formData.append('avatar', avatarFile)
+
+      if (profileId) {
+        await updateProfile(profileId, formData)
+      } else {
+        await createProfile(formData)
+      }
+      setSaved(true)
+      await fetchProfile()
+    } catch (error) {
+      console.error('プロフィール保存失敗:', error)
+    } finally {
+      setSaving(false)
+    }
   }
+
+  if (loading) return <p className="text-sm text-zinc-400">読み込み中...</p>
 
   return (
     <div className="space-y-8">
@@ -41,7 +108,7 @@ export default function AdminProfilePage() {
             <input
               type={field.type}
               name={field.name}
-              value={(form as any)[field.name] ?? ''}
+              value={(form as any)[field.name]}
               onChange={handleChange}
               className="w-full rounded-lg border border-zinc-200 bg-white px-4 py-2 text-sm text-zinc-700 outline-none transition focus:border-zinc-400"
             />
@@ -59,12 +126,23 @@ export default function AdminProfilePage() {
           />
         </div>
 
+        <div className="space-y-1">
+          <label className="text-xs tracking-widest text-zinc-400 uppercase">アバター画像</label>
+          <input
+            type="file"
+            accept="image/*"
+            onChange={(e) => setAvatarFile(e.target.files?.[0] ?? null)}
+            className="w-full text-sm text-zinc-500"
+          />
+        </div>
+
         <div className="flex items-center gap-4">
           <button
             type="submit"
-            className="rounded-lg bg-zinc-800 px-6 py-2 text-sm text-white transition hover:bg-zinc-700"
+            disabled={saving}
+            className="rounded-lg bg-zinc-800 px-6 py-2 text-sm text-white transition hover:bg-zinc-700 disabled:opacity-50"
           >
-            保存する
+            {saving ? '保存中...' : '保存する'}
           </button>
           {saved && <p className="text-xs text-green-500">保存しました ✓</p>}
         </div>

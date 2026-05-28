@@ -2,23 +2,52 @@
 
 // src/app/(admin)/admin/skills/page.tsx
 
-import { useState } from 'react'
-import { mockSkills } from '@/lib/mockData'
+import { useState, useEffect } from 'react'
+import { getSkills, createSkill, deleteSkill } from '@/lib/api'
 import { Skill } from '@/types'
 
 export default function AdminSkillsPage() {
-  const [skills, setSkills] = useState<Skill[]>(mockSkills)
+  const [skills, setSkills] = useState<Skill[]>([])
+  const [loading, setLoading] = useState(true)
   const [newSkill, setNewSkill] = useState({ name: '', category: 'frontend' as Skill['category'], level: 3 as Skill['level'] })
+  const [saving, setSaving] = useState(false)
 
-  const handleAdd = () => {
-    if (!newSkill.name.trim()) return
-    const id = skills.length > 0 ? Math.max(...skills.map((s) => s.id)) + 1 : 1
-    setSkills((prev) => [...prev, { ...newSkill, id }])
-    setNewSkill({ name: '', category: 'frontend', level: 3 })
+  useEffect(() => {
+    fetchSkills()
+  }, [])
+
+  const fetchSkills = async () => {
+    try {
+      const data = await getSkills()
+      setSkills(data)
+    } catch (error) {
+      console.error('スキル取得失敗:', error)
+    } finally {
+      setLoading(false)
+    }
   }
 
-  const handleDelete = (id: number) => {
-    setSkills((prev) => prev.filter((s) => s.id !== id))
+  const handleAdd = async () => {
+    if (!newSkill.name.trim()) return
+    setSaving(true)
+    try {
+      await createSkill(newSkill)
+      setNewSkill({ name: '', category: 'frontend', level: 3 })
+      await fetchSkills()
+    } catch (error) {
+      console.error('スキル追加失敗:', error)
+    } finally {
+      setSaving(false)
+    }
+  }
+
+  const handleDelete = async (id: number) => {
+    try {
+      await deleteSkill(id)
+      await fetchSkills()
+    } catch (error) {
+      console.error('スキル削除失敗:', error)
+    }
   }
 
   return (
@@ -56,40 +85,47 @@ export default function AdminSkillsPage() {
         <button
           type="button"
           onClick={handleAdd}
-          className="rounded-lg bg-zinc-800 px-5 py-2 text-sm text-white transition hover:bg-zinc-700"
+          disabled={saving}
+          className="rounded-lg bg-zinc-800 px-5 py-2 text-sm text-white transition hover:bg-zinc-700 disabled:opacity-50"
         >
-          追加
+          {saving ? '追加中...' : '追加'}
         </button>
       </div>
 
       {/* スキル一覧 */}
       <div className="rounded-2xl border border-zinc-200 bg-white">
-        <table className="w-full text-sm">
-          <thead>
-            <tr className="border-b border-zinc-100 text-left text-xs tracking-widest text-zinc-400 uppercase">
-              <th className="px-6 py-4">スキル名</th>
-              <th className="px-6 py-4">カテゴリ</th>
-              <th className="px-6 py-4"></th>
-            </tr>
-          </thead>
-          <tbody>
-            {skills.map((skill) => (
-              <tr key={skill.id} className="border-b border-zinc-50 last:border-0">
-                <td className="px-6 py-4 text-zinc-700">{skill.name}</td>
-                <td className="px-6 py-4 text-zinc-400">{skill.category}</td>
-                <td className="px-6 py-4 text-right">
-                  <button
-                    type="button"
-                    onClick={() => handleDelete(skill.id)}
-                    className="text-xs text-red-400 transition hover:text-red-600"
-                  >
-                    削除
-                  </button>
-                </td>
+        {loading ? (
+          <p className="px-6 py-8 text-sm text-zinc-400">読み込み中...</p>
+        ) : skills.length === 0 ? (
+          <p className="px-6 py-8 text-sm text-zinc-400">スキルがありません</p>
+        ) : (
+          <table className="w-full text-sm">
+            <thead>
+              <tr className="border-b border-zinc-100 text-left text-xs tracking-widest text-zinc-400 uppercase">
+                <th className="px-6 py-4">スキル名</th>
+                <th className="px-6 py-4">カテゴリ</th>
+                <th className="px-6 py-4"></th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {skills.map((skill) => (
+                <tr key={skill.id} className="border-b border-zinc-50 last:border-0">
+                  <td className="px-6 py-4 text-zinc-700">{skill.name}</td>
+                  <td className="px-6 py-4 text-zinc-400">{skill.category}</td>
+                  <td className="px-6 py-4 text-right">
+                    <button
+                      type="button"
+                      onClick={() => handleDelete(skill.id)}
+                      className="text-xs text-red-400 transition hover:text-red-600"
+                    >
+                      削除
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        )}
       </div>
     </div>
   )

@@ -4,10 +4,10 @@ import Link from 'next/link'
 
 export default function ContactSection() {
   return (
-    <section className="relative px-6 py-24 md:px-16">
-      {/* 背景の有機的な装飾 */}
+    <section className="relative bg-[#f4f3f0] px-6 py-24 md:px-16">
+      {/* 背景の有機的な装飾（CONTACTのみ） */}
       <div
-        className="pointer-events-none absolute bottom-[-40px] left-[-60px] h-[320px] w-[320px] bg-stone-100"
+        className="pointer-events-none absolute bottom-[-40px] left-[-60px] h-[320px] w-[320px] bg-stone-400/20"
         style={{ borderRadius: '40% 60% 60% 40% / 40% 60% 40% 60%' }}
       />
 

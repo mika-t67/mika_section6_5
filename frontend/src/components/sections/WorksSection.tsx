@@ -9,9 +9,8 @@ type Props = {
 
 export default function WorksSection({ achievements }: Props) {
   return (
-    <section className="bg-stone-100/60 px-6 py-24 md:px-16">
+    <section className="bg-[#f0eeea] px-6 py-24 md:px-16">
       <div className="mx-auto max-w-5xl">
-        {/* セクションタイトル */}
         <div className="mb-16 space-y-3">
           <p className="text-sm tracking-[0.3em] text-stone-400 uppercase">Works</p>
           <h2 className="text-3xl font-light text-stone-800">制作実績</h2>
@@ -23,24 +22,30 @@ export default function WorksSection({ achievements }: Props) {
               key={work.id}
               className="group overflow-hidden rounded-3xl bg-white shadow-sm transition hover:shadow-md"
             >
-              {/* サムネイル */}
               <div className="relative h-48 w-full overflow-hidden bg-stone-100">
-                <Image
-                  src={work.imageUrl}
-                  alt={work.title}
-                  fill
-                  className="object-cover transition duration-500 group-hover:scale-105"
-                />
+                {work.imageUrl ? (
+                  <Image
+                    src={work.imageUrl}
+                    alt={work.imageAlt ?? work.title}
+                    fill
+                    className="object-cover transition duration-500 group-hover:scale-105"
+                  />
+                ) : (
+                  <div className="flex h-full items-center justify-center text-sm text-stone-300">
+                    No Image
+                  </div>
+                )}
               </div>
 
-              {/* テキスト */}
               <div className="space-y-3 p-6">
                 <h3 className="text-base font-medium text-stone-700">{work.title}</h3>
                 <p className="text-sm leading-relaxed text-stone-400">{work.description}</p>
 
-                {/* タグ */}
                 <div className="flex flex-wrap gap-2 pt-2">
-                  {work.tags.map((tag) => (
+                  {(typeof work.tags === 'string'
+                    ? work.tags.split(',').map((t) => t.trim())
+                    : work.tags ?? []
+                  ).map((tag) => (
                     <span
                       key={tag}
                       className="rounded-full bg-stone-100 px-3 py-1 text-xs text-stone-500"
@@ -50,7 +55,6 @@ export default function WorksSection({ achievements }: Props) {
                   ))}
                 </div>
 
-                {/* リンク */}
                 {work.url && (
                   <a
                     href={work.url}
