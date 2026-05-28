@@ -10,9 +10,13 @@ const CACHE_TTL = 60 * 60 // 1時間
 router.get('/', async (req, res) => {
   try {
     // キャッシュ確認
-    const cached = await redis.get(CACHE_KEY)
-    if (cached) {
-      return res.json(JSON.parse(cached))
+    try {
+      const cached = await redis.get(CACHE_KEY)
+      if (cached) {
+        return res.json(JSON.parse(cached))
+      }
+    } catch (redisError) {
+      console.error('Redisキャッシュ取得失敗、DBにフォールバック:', redisError)
     }
  
     const skills = await prisma.skill.findMany({ orderBy: { createdAt: 'asc' } })
