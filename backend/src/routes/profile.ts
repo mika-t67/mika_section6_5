@@ -1,3 +1,4 @@
+ 
 import { Router } from 'express'
 import prisma from '../lib/prisma'
 import cloudinary from '../lib/cloudinary'
@@ -11,32 +12,36 @@ const CACHE_TTL = 60 * 60 // 1時間
 // GET /profile
 router.get('/', async (req, res) => {
   try {
-      // キャッシュ確認
-      try {
-        const cached = await redis.get(CACHE_KEY)
-        if (cached) {
-          return res.json(JSON.parse(cached))
-        }
-      } catch (redisError) {
-        console.error('Redisキャッシュ取得失敗、DBにフォールバック:', redisError)
-      }
- 
-      const profile = await prisma.profile.findFirst()
-
-      // プロフィールが存在する場合のみキャッシュに保存
-      // 未作成時はキャッシュしないことで、作成後すぐに正しいデータが返るようにする
-      if (profile) {
+    // キャッシュ確認
+    try {
+      const cached = await redis.get(CACHE_KEY)
+      if (cached) {
         try {
-          await redis.set(CACHE_KEY, JSON.stringify(profile), 'EX', CACHE_TTL)
-        } catch (redisError) {
-          console.error('Redisキャッシュ保存失敗:', redisError)
+          return res.json(JSON.parse(cached))
+        } catch (parseError) {
+          console.error('Redisキャッシュのパース失敗、DBにフォールバック:', parseError)
         }
       }
-
-      res.json(profile)
-    } catch (error) {
-    res.status(500).json({ error: 'プロフィールの取得に失敗しました' })
+    } catch (redisError) {
+      console.error('Redisキャッシュ取得失敗、DBにフォールバック:', redisError)
     }
+ 
+    const profile = await prisma.profile.findFirst()
+ 
+    // プロフィールが存在する場合のみキャッシュに保存
+    // 未作成時はキャッシュしないことで、作成後すぐに正しいデータが返るようにする
+    if (profile) {
+      try {
+        await redis.set(CACHE_KEY, JSON.stringify(profile), 'EX', CACHE_TTL)
+      } catch (redisError) {
+        console.error('Redisキャッシュ保存失敗:', redisError)
+      }
+    }
+ 
+    res.json(profile)
+  } catch (error) {
+    res.status(500).json({ error: 'プロフィールの取得に失敗しました' })
+  }
 })
  
 // POST /profile

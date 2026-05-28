@@ -13,7 +13,11 @@ router.get('/', async (req, res) => {
     try {
       const cached = await redis.get(CACHE_KEY)
       if (cached) {
-        return res.json(JSON.parse(cached))
+        try {
+          return res.json(JSON.parse(cached))
+        } catch (parseError) {
+          console.error('Redisキャッシュのパース失敗、DBにフォールバック:', parseError)
+        }
       }
     } catch (redisError) {
       console.error('Redisキャッシュ取得失敗、DBにフォールバック:', redisError)
