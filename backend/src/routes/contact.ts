@@ -9,7 +9,12 @@ router.post('/', async (req, res) => {
     const { name, email, message } = req.body
  
     if (!name || !email || !message) {
-      return res.status(400).json({ error: '名前・メールアドレス・メッセージは必須です' })
+        return res.status(400).json({ error: '名前・メールアドレス・メッセージは必須です' })
+    }
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+    if (!emailRegex.test(email)) {
+        return res.status(400).json({ error: '有効なメールアドレスを入力してください' })
     }
  
     const contact = await prisma.contact.create({
