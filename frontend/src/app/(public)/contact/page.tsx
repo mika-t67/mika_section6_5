@@ -1,9 +1,8 @@
 'use client'
 
-// src/app/(public)/contact/page.tsx
-
 import { useState } from 'react'
 import Link from 'next/link'
+import { createContact } from '@/lib/api'
 
 type FormState = {
   name: string
@@ -19,20 +18,20 @@ export default function ContactPage() {
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }))
+    setStatus('idle')
   }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setStatus('sending')
 
-    // TODO: バックエンドAPI繋ぎ込み時にここを実装
-    // const res = await fetch('/api/contact', { method: 'POST', body: JSON.stringify(form) })
-    console.log('送信データ:', form)
-
-    // 仮: 1秒後に成功扱い
-    await new Promise((r) => setTimeout(r, 1000))
-    setForm({ name: '', email: '', message: '' }) 
-    setStatus('success')
+    try {
+      await createContact(form)
+      setForm({ name: '', email: '', message: '' })
+      setStatus('success')
+    } catch (err) {
+      setStatus('error')
+    }
   }
 
   return (
@@ -75,7 +74,6 @@ export default function ContactPage() {
               </Link>
             </div>
           ) : (
-            /* フォーム */
             <form onSubmit={handleSubmit} className="space-y-8">
               <div className="space-y-2">
                 <label className="text-xs tracking-widest text-stone-400 uppercase">Name</label>

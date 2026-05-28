@@ -69,3 +69,9 @@ export const deleteAchievement = async (id: number) => {
   const res = await api.delete(`/achievements/${id}`)
   return res.data
 }
+
+// お問い合わせ
+export const createContact = async (data: { name: string; email: string; message: string }) => {
+  const res = await api.post('/contact', data)
+  return res.data
+}
