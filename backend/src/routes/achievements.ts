@@ -23,8 +23,12 @@ router.get('/', async (req, res) => {
  
     const achievements = await prisma.achievement.findMany({ orderBy: { createdAt: 'desc' } })
  
-    // キャッシュに保存
+   // キャッシュに保存
+  try {
     await redis.set(CACHE_KEY, JSON.stringify(achievements), 'EX', CACHE_TTL)
+  } catch (redisError) {
+    console.error('Redisキャッシュ保存失敗:', redisError)
+  }
  
     res.json(achievements)
   } catch (error) {

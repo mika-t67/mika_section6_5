@@ -20,10 +20,14 @@ router.get('/', async (req, res) => {
     }
  
     const skills = await prisma.skill.findMany({ orderBy: { createdAt: 'asc' } })
+   // キャッシュに保存
+    try {
+      await redis.set(CACHE_KEY, JSON.stringify(skills), 'EX', CACHE_TTL)
+    } catch (redisError) {
+      console.error('Redisキャッシュ保存失敗:', redisError)
+    }
  
-    // キャッシュに保存
-    await redis.set(CACHE_KEY, JSON.stringify(skills), 'EX', CACHE_TTL)
- 
+  
     res.json(skills)
   } catch (error) {
     res.status(500).json({ error: 'スキルの取得に失敗しました' })

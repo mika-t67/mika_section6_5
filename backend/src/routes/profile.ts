@@ -26,7 +26,11 @@ router.get('/', async (req, res) => {
       // プロフィールが存在する場合のみキャッシュに保存
       // 未作成時はキャッシュしないことで、作成後すぐに正しいデータが返るようにする
       if (profile) {
-        await redis.set(CACHE_KEY, JSON.stringify(profile), 'EX', CACHE_TTL)
+        try {
+          await redis.set(CACHE_KEY, JSON.stringify(profile), 'EX', CACHE_TTL)
+        } catch (redisError) {
+          console.error('Redisキャッシュ保存失敗:', redisError)
+        }
       }
 
       res.json(profile)
