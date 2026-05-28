@@ -11,23 +11,21 @@ const CACHE_TTL = 60 * 60 // 1時間
 // GET /profile
 router.get('/', async (req, res) => {
   try {
-    // キャッシュ確認
-    const cached = await redis.get(CACHE_KEY)
-    if (cached) {
-      return res.json(JSON.parse(cached))
-    }
+      // キャッシュ確認
+      const cached = await redis.get(CACHE_KEY)
+      if (cached) {
+        return res.json(JSON.parse(cached))
+      }
  
-    const profile = await prisma.profile.findFirst()
- 
-    // キャッシュに保存
-    if (profile) {
-      await redis.set(CACHE_KEY, JSON.stringify(profile), 'EX', CACHE_TTL)
-    }
- 
-    res.json(profile)
-  } catch (error) {
+      const profile = await prisma.profile.findFirst()
+
+      // nullでもキャッシュに保存（未作成状態も統一して扱う）
+      await redis.set(CACHE_KEY, JSON.stringify(profile ?? null), 'EX', CACHE_TTL)
+
+      res.json(profile)
+    } catch (error) {
     res.status(500).json({ error: 'プロフィールの取得に失敗しました' })
-  }
+    }
 })
  
 // POST /profile
