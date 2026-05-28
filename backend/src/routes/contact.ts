@@ -22,9 +22,10 @@ router.post('/', async (req, res) => {
     })
  
     res.status(201).json({ message: 'お問い合わせを受け付けました', contact })
-  } catch (error) {
-    res.status(500).json({ error: 'お問い合わせの送信に失敗しました' })
-  }
+    } catch (error) {
+      console.error('お問い合わせ保存エラー:', error)
+      res.status(500).json({ error: 'お問い合わせの送信に失敗しました' })
+    }
 })
  
  
