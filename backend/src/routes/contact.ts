@@ -27,17 +27,6 @@ router.post('/', async (req, res) => {
   }
 })
  
-// GET /contact (管理画面用)
-router.get('/', async (req, res) => {
-  try {
-    const contacts = await prisma.contact.findMany({
-      orderBy: { createdAt: 'desc' },
-    })
-    res.json(contacts)
-  } catch (error) {
-    res.status(500).json({ error: 'お問い合わせの取得に失敗しました' })
-  }
-})
  
 export default router
  
