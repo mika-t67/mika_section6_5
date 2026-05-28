@@ -68,7 +68,11 @@ router.post('/', upload.single('avatar'), async (req, res) => {
     })
  
     // キャッシュ削除
-    await redis.del(CACHE_KEY)
+    try {
+      await redis.del(CACHE_KEY)
+    } catch (redisError) {
+      console.error('Redisキャッシュ削除失敗:', redisError)
+    }
  
     res.status(201).json(profile)
   } catch (error) {
@@ -114,7 +118,11 @@ router.put('/:id', upload.single('avatar'), async (req, res) => {
     })
  
     // キャッシュ削除
-    await redis.del(CACHE_KEY)
+    try {
+      await redis.del(CACHE_KEY)
+    } catch (redisError) {
+      console.error('Redisキャッシュ削除失敗:', redisError)
+    }
  
     res.json(profile)
   } catch (error) {

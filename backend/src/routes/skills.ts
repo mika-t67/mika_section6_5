@@ -20,14 +20,14 @@ router.get('/', async (req, res) => {
     }
  
     const skills = await prisma.skill.findMany({ orderBy: { createdAt: 'asc' } })
-   // キャッシュに保存
+ 
+    // キャッシュに保存
     try {
       await redis.set(CACHE_KEY, JSON.stringify(skills), 'EX', CACHE_TTL)
     } catch (redisError) {
       console.error('Redisキャッシュ保存失敗:', redisError)
     }
  
-  
     res.json(skills)
   } catch (error) {
     res.status(500).json({ error: 'スキルの取得に失敗しました' })
@@ -43,7 +43,11 @@ router.post('/', async (req, res) => {
     })
  
     // キャッシュ削除
-    await redis.del(CACHE_KEY)
+    try {
+      await redis.del(CACHE_KEY)
+    } catch (redisError) {
+      console.error('Redisキャッシュ削除失敗:', redisError)
+    }
  
     res.status(201).json(skill)
   } catch (error) {
@@ -71,7 +75,11 @@ router.put('/:id', async (req, res) => {
     })
  
     // キャッシュ削除
-    await redis.del(CACHE_KEY)
+    try {
+      await redis.del(CACHE_KEY)
+    } catch (redisError) {
+      console.error('Redisキャッシュ削除失敗:', redisError)
+    }
  
     res.json(skill)
   } catch (error) {
@@ -95,7 +103,11 @@ router.delete('/:id', async (req, res) => {
     await prisma.skill.delete({ where: { id } })
  
     // キャッシュ削除
-    await redis.del(CACHE_KEY)
+    try {
+      await redis.del(CACHE_KEY)
+    } catch (redisError) {
+      console.error('Redisキャッシュ削除失敗:', redisError)
+    }
  
     res.json({ message: '削除しました' })
   } catch (error) {

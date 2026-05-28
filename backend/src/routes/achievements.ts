@@ -1,3 +1,5 @@
+// src/routes/achievements.ts
+ 
 import { Router } from 'express'
 import prisma from '../lib/prisma'
 import cloudinary from '../lib/cloudinary'
@@ -23,12 +25,12 @@ router.get('/', async (req, res) => {
  
     const achievements = await prisma.achievement.findMany({ orderBy: { createdAt: 'desc' } })
  
-   // キャッシュに保存
-  try {
-    await redis.set(CACHE_KEY, JSON.stringify(achievements), 'EX', CACHE_TTL)
-  } catch (redisError) {
-    console.error('Redisキャッシュ保存失敗:', redisError)
-  }
+    // キャッシュに保存
+    try {
+      await redis.set(CACHE_KEY, JSON.stringify(achievements), 'EX', CACHE_TTL)
+    } catch (redisError) {
+      console.error('Redisキャッシュ保存失敗:', redisError)
+    }
  
     res.json(achievements)
   } catch (error) {
@@ -60,7 +62,11 @@ router.post('/', upload.single('image'), async (req, res) => {
     })
  
     // キャッシュ削除
-    await redis.del(CACHE_KEY)
+    try {
+      await redis.del(CACHE_KEY)
+    } catch (redisError) {
+      console.error('Redisキャッシュ削除失敗:', redisError)
+    }
  
     res.status(201).json(achievement)
   } catch (error) {
@@ -106,7 +112,11 @@ router.put('/:id', upload.single('image'), async (req, res) => {
     })
  
     // キャッシュ削除
-    await redis.del(CACHE_KEY)
+    try {
+      await redis.del(CACHE_KEY)
+    } catch (redisError) {
+      console.error('Redisキャッシュ削除失敗:', redisError)
+    }
  
     res.json(achievement)
   } catch (error) {
@@ -130,7 +140,11 @@ router.delete('/:id', async (req, res) => {
     await prisma.achievement.delete({ where: { id } })
  
     // キャッシュ削除
-    await redis.del(CACHE_KEY)
+    try {
+      await redis.del(CACHE_KEY)
+    } catch (redisError) {
+      console.error('Redisキャッシュ削除失敗:', redisError)
+    }
  
     res.json({ message: '削除しました' })
   } catch (error) {
@@ -139,4 +153,3 @@ router.delete('/:id', async (req, res) => {
 })
  
 export default router
- 
