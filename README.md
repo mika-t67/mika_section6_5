@@ -159,3 +159,32 @@ curl http://localhost:3001/health
 curl http://localhost:3001/skills
 # → []（初期状態は空配列）
 ```
+---
+
+## Redisキャッシュ（issue #10）
+
+### やったこと
+- `docker-compose.yml` に Redis（redis:7-alpine）を追加
+- `src/lib/redis.ts` 作成（ioredis）
+- profile・skills・achievements の GET にキャッシュ追加
+- POST・PUT・DELETE 時にキャッシュ削除
+
+### キャッシュの仕組み
+```
+1回目: リクエスト → DBから取得 → Redisに保存 → レスポンス
+2回目以降: リクエスト → Redisから返す（DBアクセスなし）
+```
+キャッシュの有効期限: 1時間（3600秒）
+
+### 確認方法
+```bash
+# キャッシュの中身を確認
+docker exec -it portfolio_redis redis-cli GET profile
+
+# キャッシュをリセット
+docker exec -it portfolio_redis redis-cli FLUSHALL
+```
+
+### 詰まった点・解決策
+- Redis起動直後に `ECONNREFUSED` エラー → 起動タイミングのズレで一時的なもの、`Redis connected` が出れば正常
+- `docker-compose up -d` で Redis が起動しない → `docker-compose.yml` の保存が反映されていなかったため再保存して解決
