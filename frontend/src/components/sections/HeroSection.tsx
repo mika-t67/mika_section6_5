@@ -1,4 +1,3 @@
-// src/components/sections/HeroSection.tsx
 import { Poppins } from 'next/font/google'
 import { Profile } from '@/types'
 import Image from 'next/image'
@@ -20,6 +19,7 @@ export default function HeroSection({ profile }: Props) {
         className="pointer-events-none absolute right-[-80px] top-[-60px] h-[420px] w-[420px] bg-stone-200/50"
         style={{ borderRadius: '60% 40% 40% 60% / 60% 40% 60% 40%' }}
       />
+
       <div className="relative z-10 mx-auto flex w-full max-w-5xl flex-col items-center gap-16 md:flex-row">
         {/* テキスト */}
         <div className="flex-1 space-y-8">
@@ -56,27 +56,22 @@ export default function HeroSection({ profile }: Props) {
           </div>
         </div>
 
-        {/* アバター（有機的な形） */}
+        {/* アバター（有機的な形・一色） */}
         <div className="relative flex-shrink-0">
           <div
-            className="h-64 w-64 overflow-hidden bg-stone-200 md:h-80 md:w-80"
+            className="h-72 w-72 overflow-hidden bg-[#fbf0e8] md:h-96 md:w-96"
             style={{ borderRadius: '60% 40% 55% 45% / 45% 55% 45% 55%' }}
           >
             <Image
               src={profile.avatarUrl ?? ''}
               alt={profile.name}
-              width={320}
-              height={320}
-              className="h-full w-full object-cover"
+              width={384}
+              height={384}
+              className="h-full w-full object-contain p-6"
             />
           </div>
-          <div
-            className="absolute -bottom-4 -right-4 -z-10 h-64 w-64 bg-stone-100 md:h-80 md:w-80"
-            style={{ borderRadius: '45% 55% 60% 40% / 55% 45% 55% 45%' }}
-          />
         </div>
       </div>
     </section>
   )
 }
-
