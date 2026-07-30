@@ -6,6 +6,10 @@ import WorksSection from '@/components/sections/WorksSection'
 import ContactSection from '@/components/sections/ContactSection'
 import Footer from '@/components/Footer'
 
+// 管理画面での更新を即座に反映させるため、リクエストごとにサーバーで描画する
+// （既定では静的生成され、ビルド時点のデータで固定されてしまう）
+export const dynamic = 'force-dynamic'
+
 export default async function HomePage() {
   // APIからデータ取得、失敗時はモックデータにフォールバック
   const [profile, skills, achievements] = await Promise.all([
