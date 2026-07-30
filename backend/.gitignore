@@ -3,3 +3,6 @@ node_modules
 .env
 
 /generated/prisma
+
+# ビルド成果物（ソースから再生成されるため管理しない）
+dist

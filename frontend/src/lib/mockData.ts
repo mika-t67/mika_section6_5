@@ -1,54 +1,134 @@
 import { Profile, Skill, Achievement } from '@/types'
- 
+
+// このファイルは scripts/generate-fallback.mjs による自動生成です。
+// APIに接続できない場合／データが0件の場合の表示内容として使われます。
+// 内容を更新するには、バックエンドを起動した状態で次を実行してください:
+//   npm run generate:fallback
+
 export const mockProfile: Profile = {
-  id: 1,
-  name: '山田 花子',
-  nameEn: 'Hanako Yamada',
-  role: 'Frontend Developer & Designer',
-  bio: 'デザインとコードの境界を探求するフロントエンドエンジニア。\n余白と有機的なかたちが好きです。',
-  avatarUrl: '/images/avatar.svg',
-  email: 'hello@example.com',
-  twitterUrl: 'https://twitter.com/example',
-  githubUrl: 'https://github.com/example',
+  "id": 1,
+  "name": "高橋 美香",
+  "nameEn": "Mika Takahashi",
+  "role": "",
+  "bio": "エンジニアスクールでフルスタック開発を学習しています。\r\nNext.js / Express.js / Prisma / MySQL / Firebase を使用し、\r\n管理画面付きのWebアプリケーション開発に取り組んでいます。",
+  "avatarUrl": "https://res.cloudinary.com/ds4flierp/image/upload/v1779966277/portfolio/avatar/vhysqu0highcoofw7tvm.png",
+  "email": "myanmm.2525@gmail.com"
 }
- 
+
 export const mockSkills: Skill[] = [
-  { id: 1, name: 'React', category: 'frontend', level: 4 },
-  { id: 2, name: 'Next.js', category: 'frontend', level: 4 },
-  { id: 3, name: 'TypeScript', category: 'frontend', level: 3 },
-  { id: 4, name: 'Tailwind CSS', category: 'frontend', level: 4 },
-  { id: 5, name: 'Figma', category: 'design', level: 4 },
-  { id: 6, name: 'Node.js', category: 'backend', level: 3 },
-  { id: 7, name: 'Prisma', category: 'backend', level: 2 },
-  { id: 8, name: 'MySQL', category: 'backend', level: 2 },
+  {
+    "id": 1,
+    "name": "React",
+    "category": "frontend",
+    "level": 3
+  },
+  {
+    "id": 2,
+    "name": "Next.js",
+    "category": "frontend",
+    "level": 3
+  },
+  {
+    "id": 3,
+    "name": "TypeScript",
+    "category": "frontend",
+    "level": 3
+  },
+  {
+    "id": 4,
+    "name": "Tailwind CSS",
+    "category": "frontend",
+    "level": 3
+  },
+  {
+    "id": 5,
+    "name": "Node.js",
+    "category": "backend",
+    "level": 3
+  },
+  {
+    "id": 6,
+    "name": "Prisma",
+    "category": "backend",
+    "level": 3
+  },
+  {
+    "id": 8,
+    "name": "Figma",
+    "category": "design",
+    "level": 3
+  },
+  {
+    "id": 9,
+    "name": "MySQL",
+    "category": "backend",
+    "level": 3
+  },
+  {
+    "id": 10,
+    "name": "Express.js",
+    "category": "backend",
+    "level": 3
+  },
+  {
+    "id": 11,
+    "name": "Docker",
+    "category": "other",
+    "level": 3
+  },
+  {
+    "id": 12,
+    "name": "Git",
+    "category": "other",
+    "level": 3
+  },
+  {
+    "id": 13,
+    "name": "Redis",
+    "category": "backend",
+    "level": 3
+  },
+  {
+    "id": 14,
+    "name": "Firebase",
+    "category": "other",
+    "level": 3
+  },
+  {
+    "id": 15,
+    "name": "Cloudinary",
+    "category": "other",
+    "level": 3
+  }
 ]
- 
+
 export const mockAchievements: Achievement[] = [
   {
-    id: 1,
-    title: 'ポートフォリオサイト',
-    description: 'Next.js + Tailwind CSS で制作した自身のポートフォリオ。ミニマルで有機的なデザインを意識しました。',
-    imageUrl: '/images/works/work1.svg',
-    tags: ['Next.js', 'TypeScript', 'Tailwind CSS'],
-    url: 'https://example.com',
-    createdAt: '2024-04-01',
+    "id": 3,
+    "title": "ポートフォリオサイト",
+    "description": "Next.js + Tailwind CSS で制作した自身のポートフォリオ",
+    "imageUrl": "https://res.cloudinary.com/ds4flierp/image/upload/v1780019085/portfolio/achievements/lhk204vbvbyaiojtokzp.png",
+    "tags": [
+      "Next.js",
+      "TypeScript",
+      "Tailwind CSS"
+    ],
+    "createdAt": "2026-05-29"
   },
   {
-    id: 2,
-    title: 'タスク管理アプリ',
-    description: 'React + Firebase を使ったシンプルなタスク管理アプリ。ドラッグ&ドロップで並べ替えが可能。',
-    imageUrl: '/images/works/work2.svg',
-    tags: ['React', 'Firebase', 'TypeScript'],
-    createdAt: '2024-01-15',
-  },
-  {
-    id: 3,
-    title: 'ECサイトLP',
-    description: 'オーガニックコスメブランドのランディングページ。ナチュラルトーンの配色とアニメーションが特徴。',
-    imageUrl: '/images/works/work3.svg',
-    tags: ['HTML', 'CSS', 'JavaScript'],
-    url: 'https://example.com',
-    createdAt: '2023-10-01',
-  },
+    "id": 2,
+    "title": "家計簿アプリ",
+    "description": "収支の記録・管理ができるフルスタックWebアプリケーション",
+    "imageUrl": "https://res.cloudinary.com/ds4flierp/image/upload/v1780018850/portfolio/achievements/vbannhvioiuv5i4pawah.png",
+    "tags": [
+      "Next.js",
+      "TypeScript",
+      "Tailwind CSS",
+      "SWR",
+      "Node.js",
+      "Express.js",
+      "Prisma"
+    ],
+    "createdAt": "2026-05-29"
+  }
 ]
- 

@@ -1,8 +1,9 @@
 'use client'
 
 import Link from 'next/link'
-import { useRouter } from 'next/navigation'
-import { signOut } from '@/lib/auth'
+import { useEffect, useState } from 'react'
+import { useRouter, usePathname } from 'next/navigation'
+import { onAuthChange, signOut } from '@/lib/auth'
 
 const navItems = [
   { label: 'ダッシュボード', href: '/admin' },
@@ -13,10 +14,43 @@ const navItems = [
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
   const router = useRouter()
+  const pathname = usePathname()
+  const isLoginPage = pathname === '/admin/login'
+  const [checking, setChecking] = useState(true)
+
+  useEffect(() => {
+    if (isLoginPage) {
+      setChecking(false)
+      return
+    }
+
+    const unsubscribe = onAuthChange((user) => {
+      if (!user) {
+        router.replace('/admin/login')
+      } else {
+        setChecking(false)
+      }
+    })
+
+    return unsubscribe
+  }, [isLoginPage, router])
 
   const handleSignOut = async () => {
     await signOut()
     router.push('/admin/login')
+  }
+
+  // ログイン画面はサイドバーなしで表示
+  if (isLoginPage) {
+    return <>{children}</>
+  }
+
+  if (checking) {
+    return (
+      <div className="flex min-h-screen items-center justify-center bg-zinc-50">
+        <p className="text-sm text-zinc-400">読み込み中...</p>
+      </div>
+    )
   }
 
   return (
