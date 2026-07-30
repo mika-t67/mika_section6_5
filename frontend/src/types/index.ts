@@ -9,7 +9,7 @@ export type Profile = {
   twitterUrl?: string
   githubUrl?: string
 }
- 
+
 export type Skill = {
   id: number
   name: string
@@ -17,17 +17,18 @@ export type Skill = {
   level: 1 | 2 | 3 | 4 | 5 // 1: 入門 〜 5: 熟練
   iconUrl?: string
 }
- 
+
 export type Achievement = {
   id: number
   title: string
   description: string
   imageUrl: string
-  tags: string[]
+  imageAlt?: string | null
+  tags: string[] | string // DBはカンマ区切りの文字列で返す
   url?: string
   createdAt: string // ISO 8601
 }
- 
+
 export type Contact = {
   id: number
   name: string
@@ -35,4 +36,3 @@ export type Contact = {
   message: string
   createdAt: string
 }
- 
