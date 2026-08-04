@@ -35,6 +35,7 @@ router.get('/', async (req, res) => {
 
     res.json(skills)
   } catch (error) {
+    console.error('スキル取得エラー:', error)
     res.status(500).json({ error: 'スキルの取得に失敗しました' })
   }
 })
@@ -56,6 +57,7 @@ router.post('/', verifyToken, async (req, res) => {
 
     res.status(201).json(skill)
   } catch (error) {
+    console.error('スキル作成エラー:', error)
     res.status(500).json({ error: 'スキルの作成に失敗しました' })
   }
 })
@@ -88,6 +90,7 @@ router.put('/:id', verifyToken, async (req, res) => {
 
     res.json(skill)
   } catch (error) {
+    console.error('スキル更新エラー:', error)
     res.status(500).json({ error: 'スキルの更新に失敗しました' })
   }
 })
@@ -116,6 +119,7 @@ router.delete('/:id', verifyToken, async (req, res) => {
 
     res.json({ message: '削除しました' })
   } catch (error) {
+    console.error('スキル削除エラー:', error)
     res.status(500).json({ error: 'スキルの削除に失敗しました' })
   }
 })
