@@ -34,7 +34,8 @@
   --color-navy: var(--navy);
   --color-ink: var(--ink);
 
-  /* font-nav / font-heading / font-body で使える（公開側のみ） */
+  /* font-display / font-nav / font-heading / font-body で使える（公開側のみ） */
+  --font-display: var(--font-righteous), system-ui, sans-serif;
   --font-nav: var(--font-dm-sans), system-ui, sans-serif;
   --font-heading: var(--font-montserrat), system-ui, sans-serif;
   --font-body: var(--font-zen-kaku), "Hiragino Kaku Gothic ProN", "Hiragino Sans", Meiryo, sans-serif;
