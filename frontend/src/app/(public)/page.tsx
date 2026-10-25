@@ -5,6 +5,7 @@ import SkillsSection from '@/components/sections/SkillsSection'
 import WorksSection from '@/components/sections/WorksSection'
 import ContactSection from '@/components/sections/ContactSection'
 import Footer from '@/components/Footer'
+import FadeIn from '@/components/ui/FadeIn'
 
 export default async function HomePage() {
   // APIからデータ取得、失敗時はモックデータにフォールバック
@@ -17,9 +18,15 @@ export default async function HomePage() {
   return (
     <main className="min-h-screen text-stone-800">
       <HeroSection profile={profile ?? mockProfile} />
-      <SkillsSection skills={skills.length > 0 ? skills : mockSkills} />
-      <WorksSection achievements={achievements.length > 0 ? achievements : mockAchievements} />
-      <ContactSection />
+      <FadeIn>
+        <SkillsSection skills={skills.length > 0 ? skills : mockSkills} />
+      </FadeIn>
+      <FadeIn>
+        <WorksSection achievements={achievements.length > 0 ? achievements : mockAchievements} />
+      </FadeIn>
+      <FadeIn>
+        <ContactSection />
+      </FadeIn>
       <Footer />
     </main>
   )
