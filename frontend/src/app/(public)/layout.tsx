@@ -1,4 +1,5 @@
 import { DM_Sans, Montserrat, Zen_Kaku_Gothic_New } from 'next/font/google'
+import Header from '@/components/layout/Header'
 
 // ナビ用
 const dmSans = DM_Sans({
@@ -31,9 +32,12 @@ export default function PublicLayout({
 }>) {
   return (
     <div
+      id="top"
       className={`public-site flex-1 ${dmSans.variable} ${montserrat.variable} ${zenKaku.variable}`}
     >
-      {children}
+      <Header />
+      {/* 固定ヘッダーの高さぶん、中身を下にずらす */}
+      <div className="pt-[var(--header-h)]">{children}</div>
     </div>
   )
 }
