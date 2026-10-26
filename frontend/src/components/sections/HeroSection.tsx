@@ -52,7 +52,7 @@ export default function HeroSection({ profile }: Props) {
           <a
             href="#message"
             aria-label="下へスクロール"
-            className="mt-12 block h-8 w-9 bg-brand [clip-path:polygon(0_0,100%_0,50%_100%)] md:mt-16 md:h-[38px] md:w-[44px]"
+            className="mt-12 block h-5 w-6 bg-brand [clip-path:polygon(0_0,100%_0,50%_100%)] md:mt-16 md:h-6 md:w-7"
           />
         </div>
       </section>
@@ -64,7 +64,7 @@ export default function HeroSection({ profile }: Props) {
         className="px-5 py-24 md:px-16 md:py-40"
       >
         <FadeIn className="mx-auto max-w-3xl text-center">
-          <p className="text-lg leading-loose tracking-wide text-ink md:text-2xl md:leading-loose">
+          <p className="text-base leading-loose tracking-wide text-ink md:text-xl md:leading-loose">
             {MESSAGE_LINES.map((line) => (
               <span key={line} className="block">
                 {line}
