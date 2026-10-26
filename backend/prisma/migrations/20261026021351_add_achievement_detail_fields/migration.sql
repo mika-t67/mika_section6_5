@@ -1,0 +1,9 @@
+-- AlterTable
+ALTER TABLE `Achievement` ADD COLUMN `challenge` TEXT NULL,
+    ADD COLUMN `devType` VARCHAR(191) NULL,
+    ADD COLUMN `device` VARCHAR(191) NOT NULL DEFAULT 'pc',
+    ADD COLUMN `githubUrl` VARCHAR(191) NULL,
+    ADD COLUMN `period` VARCHAR(191) NULL,
+    ADD COLUMN `role` TEXT NULL,
+    ADD COLUMN `sortOrder` INTEGER NOT NULL DEFAULT 0,
+    ADD COLUMN `techReason` TEXT NULL;

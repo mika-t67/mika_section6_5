@@ -35,9 +35,22 @@ model Achievement {
   title       String
   description String   @db.Text
   imageUrl    String?
-  imageAlt    String?  
+  imageAlt    String?
   tags        String?
   url         String?
+
+  // 一覧の表示用
+  device      String   @default("pc") // "pc" または "mobile"
+  sortOrder   Int      @default(0)
+
+  // 詳細ページ用
+  devType     String?  // 例：個人開発 / チーム開発（4人）
+  period      String?  // 例：2026年5月〜6月（約1か月）
+  role        String?  @db.Text
+  techReason  String?  @db.Text
+  challenge   String?  @db.Text
+  githubUrl   String?
+
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 }
