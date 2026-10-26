@@ -23,9 +23,7 @@ export default async function HomePage() {
     <main className="min-h-screen">
       <HeroSection profile={safeProfile} />
       <AboutSection profile={safeProfile} skills={safeSkills} />
-      <FadeIn>
-        <WorksSection achievements={safeAchievements} />
-      </FadeIn>
+      <WorksSection achievements={safeAchievements} />
       <FadeIn>
         <ContactSection />
       </FadeIn>
