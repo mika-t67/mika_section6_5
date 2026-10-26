@@ -10,6 +10,7 @@ const navItems = [
   { label: 'プロフィール', href: '/admin/profile' },
   { label: 'スキル', href: '/admin/skills' },
   { label: '実績', href: '/admin/works' },
+  { label: 'お問い合わせ', href: '/admin/contacts' },
 ]
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {

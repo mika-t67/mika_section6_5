@@ -4,6 +4,7 @@ const cards = [
   { label: 'プロフィール', description: '名前・bio・SNSリンクを編集', href: '/admin/profile' },
   { label: 'スキル', description: 'スキルの追加・編集・削除', href: '/admin/skills' },
   { label: '実績', description: '制作物の追加・編集・削除', href: '/admin/works' },
+  { label: 'お問い合わせ', description: 'フォームから届いたお問い合わせを確認', href: '/admin/contacts' },
 ]
 
 export default function AdminDashboardPage() {
