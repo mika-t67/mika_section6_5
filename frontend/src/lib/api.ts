@@ -3,6 +3,8 @@ import type { Achievement } from '@/types'
 
 const api = axios.create({
   baseURL: process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001',
+  // APIが返事をしないときは10秒で諦める（呼び出し側で予備データに切り替える）
+  timeout: 10000,
 })
 
 // リクエスト前にIDトークンを付与する

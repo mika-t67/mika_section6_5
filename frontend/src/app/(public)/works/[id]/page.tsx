@@ -3,7 +3,7 @@ import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { cache, type ReactNode } from 'react'
 import axios from 'axios'
-import { getAchievement } from '@/lib/api'
+import { getAchievement, getAchievements } from '@/lib/api'
 import { mockAchievements } from '@/lib/mockData'
 import type { Achievement } from '@/types'
 import DeviceFrame from '@/components/ui/DeviceFrame'
@@ -12,6 +12,20 @@ import Footer from '@/components/Footer'
 
 type Props = {
   params: Promise<{ id: string }>
+}
+
+// 作っておいたページをすぐ返しつつ、60秒たったら裏で最新のデータに作り直す
+export const revalidate = 60
+
+// ビルドのときに、今ある作品の詳細ページを先に作っておく
+// （あとから追加した作品は、最初にアクセスされたときに作られる）
+export async function generateStaticParams() {
+  try {
+    const works = await getAchievements()
+    return works.map((work) => ({ id: String(work.id) }))
+  } catch {
+    return mockAchievements.map((work) => ({ id: String(work.id) }))
+  }
 }
 
 // URLのIDを数値にする（正の整数以外は無効）

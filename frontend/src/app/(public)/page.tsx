@@ -6,6 +6,10 @@ import WorksSection from '@/components/sections/WorksSection'
 import ContactSection from '@/components/sections/ContactSection'
 import Footer from '@/components/Footer'
 
+// 作っておいたページをすぐ返しつつ、60秒たったら裏で最新のデータに作り直す
+// （管理画面での更新が、数分以内にトップページに反映される）
+export const revalidate = 60
+
 export default async function HomePage() {
   // APIからデータ取得、失敗時はモックデータにフォールバック
   const [profile, skills, achievements] = await Promise.all([
