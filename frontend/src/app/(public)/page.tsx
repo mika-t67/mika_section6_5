@@ -5,7 +5,6 @@ import AboutSection from '@/components/sections/AboutSection'
 import WorksSection from '@/components/sections/WorksSection'
 import ContactSection from '@/components/sections/ContactSection'
 import Footer from '@/components/Footer'
-import FadeIn from '@/components/ui/FadeIn'
 
 export default async function HomePage() {
   // APIからデータ取得、失敗時はモックデータにフォールバック
@@ -24,9 +23,7 @@ export default async function HomePage() {
       <HeroSection profile={safeProfile} />
       <AboutSection profile={safeProfile} skills={safeSkills} />
       <WorksSection achievements={safeAchievements} />
-      <FadeIn>
-        <ContactSection />
-      </FadeIn>
+      <ContactSection />
       <Footer />
     </main>
   )
