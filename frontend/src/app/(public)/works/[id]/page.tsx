@@ -111,7 +111,7 @@ export default async function WorkDetailPage({ params }: Props) {
     rows.push({ label: '技術選定の理由', content: work.techReason })
   }
   if (hasText(work.challenge)) {
-    rows.push({ label: '苦労したことと解決策', content: work.challenge })
+    rows.push({ label: '課題と解決', content: work.challenge })
   }
   if (hasText(work.url)) {
     rows.push({
@@ -155,6 +155,7 @@ export default async function WorkDetailPage({ params }: Props) {
   )
 
   // ===== 作品の情報（左のネイビーの細い縦線つき） =====
+  // 項目名の列は、いちばん長い「技術選定の理由」が1行に収まる幅にする
   const infoList =
     rows.length > 0 ? (
       <dl
@@ -165,7 +166,7 @@ export default async function WorkDetailPage({ params }: Props) {
         {rows.map((row) => (
           <FadeIn
             key={row.label}
-            className={`grid gap-2 sm:gap-6 ${isMobile ? 'sm:grid-cols-[8rem_1fr]' : 'sm:grid-cols-[10rem_1fr]'}`}
+            className={`grid gap-2 sm:gap-6 ${isMobile ? 'sm:grid-cols-[9rem_1fr]' : 'sm:grid-cols-[10rem_1fr]'}`}
           >
             {/* 項目名と説明の行の高さをそろえて、1行目の位置を合わせる */}
             <dt className="flex gap-2 text-sm leading-loose tracking-wide text-navy">

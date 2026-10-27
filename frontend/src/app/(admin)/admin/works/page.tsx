@@ -71,7 +71,7 @@ const TEXTAREA_FIELDS: { label: string; key: keyof FormState; rows: number; plac
   { label: '概要', key: 'description', rows: 3, placeholder: 'どんなアプリか、誰のための何を解決するものか' },
   { label: '担当範囲', key: 'role', rows: 4, placeholder: 'チーム開発の場合は、自分が担当した画面や機能' },
   { label: '技術選定の理由', key: 'techReason', rows: 4, placeholder: 'その技術を選んだ理由' },
-  { label: '苦労したことと解決策', key: 'challenge', rows: 6, placeholder: 'つまずいたこと、どう調べてどう解決したか' },
+  { label: '課題と解決', key: 'challenge', rows: 6, placeholder: 'ぶつかった課題と、どう解決したか' },
 ]
 
 const inputClass =
