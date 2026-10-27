@@ -108,11 +108,20 @@ export const mockAchievements: Achievement[] = [
     "title": "ポートフォリオサイト",
     "description": "Next.js + Tailwind CSS で制作した自身のポートフォリオ",
     "imageUrl": "https://res.cloudinary.com/ds4flierp/image/upload/v1780019085/portfolio/achievements/lhk204vbvbyaiojtokzp.png",
+    "imageAlt": "",
     "tags": [
       "Next.js",
       "TypeScript",
       "Tailwind CSS"
     ],
+    "device": "pc",
+    "sortOrder": 0,
+    "devType": null,
+    "period": null,
+    "role": null,
+    "techReason": null,
+    "challenge": null,
+    "githubUrl": null,
     "createdAt": "2026-05-29"
   },
   {
@@ -120,6 +129,7 @@ export const mockAchievements: Achievement[] = [
     "title": "家計簿アプリ",
     "description": "収支の記録・管理ができるフルスタックWebアプリケーション",
     "imageUrl": "https://res.cloudinary.com/ds4flierp/image/upload/v1780018850/portfolio/achievements/vbannhvioiuv5i4pawah.png",
+    "imageAlt": "",
     "tags": [
       "Next.js",
       "TypeScript",
@@ -129,6 +139,14 @@ export const mockAchievements: Achievement[] = [
       "Express.js",
       "Prisma"
     ],
+    "device": "pc",
+    "sortOrder": 0,
+    "devType": null,
+    "period": null,
+    "role": null,
+    "techReason": null,
+    "challenge": null,
+    "githubUrl": null,
     "createdAt": "2026-05-29"
   }
 ]

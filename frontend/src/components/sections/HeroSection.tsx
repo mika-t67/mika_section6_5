@@ -1,77 +1,78 @@
-import { Poppins } from 'next/font/google'
 import { Profile } from '@/types'
-import Image from 'next/image'
-
-const poppins = Poppins({
-  subsets: ['latin'],
-  weight: ['300'],
-})
+import FadeIn from '@/components/ui/FadeIn'
 
 type Props = {
   profile: Profile
 }
 
+// 仮の文章。内容が決まったら差し替える
+const MESSAGE_LINES = [
+  '目の前の人の「困った」に気づき、',
+  '仕組みで解決できるエンジニアを目指しています。',
+]
+
 export default function HeroSection({ profile }: Props) {
+  // 「Mika Takahashi」を「Mika」と「Takahashi」の2行に分ける
+  const [firstName, ...restNames] = profile.nameEn.trim().split(/\s+/)
+  const lastName = restNames.join(' ')
+
   return (
-    <section className="relative flex min-h-screen items-center bg-[#f9f8f6] px-6 py-24 md:px-16">
-      {/* 背景の有機的な装飾 */}
-      <div
-        className="pointer-events-none absolute right-[-80px] top-[-60px] h-[420px] w-[420px] bg-stone-200/50"
-        style={{ borderRadius: '60% 40% 40% 60% / 60% 40% 60% 40%' }}
-      />
+    <>
+      {/* ===== ヒーロー ===== */}
+      <section
+        aria-label="トップ"
+        className="flex min-h-[calc(100svh-var(--header-h))] flex-col justify-center px-5 pb-10 md:px-16"
+      >
+        <div className="mx-auto w-full max-w-6xl">
+          {/* 右側に縦書きの「Web Engineer」を置くぶん、幅を少し空ける */}
+          <div className="relative w-[calc(100%-2rem)] max-w-[870px] md:w-[calc(100%-3rem)]">
+            {/* 文字は左上に寄せて、枠の下に空白を取る */}
+            <div className="border-4 border-brand/85 px-5 pb-20 pt-5 md:border-[5px] md:px-8 md:pb-36 md:pt-7">
+              <h1 className="font-display text-[clamp(2.25rem,9vw,6rem)] leading-[0.92] text-brand">
+                {firstName}
+                {lastName && (
+                  <>
+                    <br />
+                    {lastName}
+                  </>
+                )}
+              </h1>
+              <p className="mt-2 pl-1 font-heading text-lg text-brand md:mt-3 md:pl-2 md:text-2xl">
+                portfolio
+              </p>
+            </div>
 
-      <div className="relative z-10 mx-auto flex w-full max-w-5xl flex-col items-center gap-16 md:flex-row">
-        {/* テキスト */}
-        <div className="flex-1 space-y-8">
-          <p className="text-sm tracking-[0.3em] text-stone-400 uppercase">
-            {profile.role}
-          </p>
-          <h1 className={`${poppins.className} text-5xl font-light leading-tight tracking-tight text-stone-700 md:text-6xl`}>
-            {profile.nameEn}
-          </h1>
-          <p className="whitespace-pre-line text-base leading-relaxed text-stone-500">
-            {profile.bio}
-          </p>
-          <div className="flex gap-6 pt-4">
-            {profile.githubUrl && (
-              <a
-                href={profile.githubUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-sm tracking-widest text-stone-400 underline-offset-4 transition hover:text-stone-700 hover:underline"
-              >
-                GitHub
-              </a>
-            )}
-            {profile.twitterUrl && (
-              <a
-                href={profile.twitterUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-sm tracking-widest text-stone-400 underline-offset-4 transition hover:text-stone-700 hover:underline"
-              >
-                Twitter
-              </a>
-            )}
+            {/* 縦書きは行の高さが横幅になるので、leading-noneで文字の左右の余白をなくす */}
+            <p className="absolute bottom-0 left-full ml-0.5 font-heading text-xs leading-none text-brand [writing-mode:vertical-rl] md:text-xl">
+              Web Engineer
+            </p>
           </div>
-        </div>
 
-        {/* アバター（有機的な形・一色） */}
-        <div className="relative flex-shrink-0">
-          <div
-            className="h-72 w-72 overflow-hidden bg-[#fbf0e8] md:h-96 md:w-96"
-            style={{ borderRadius: '60% 40% 55% 45% / 45% 55% 45% 55%' }}
-          >
-            <Image
-              src={profile.avatarUrl ?? ''}
-              alt={profile.name}
-              width={384}
-              height={384}
-              className="h-full w-full object-contain p-6"
-            />
-          </div>
+          {/* スクロールの合図。押すと下の文章まで移動する */}
+          <a
+            href="#message"
+            aria-label="下へスクロール"
+            className="mt-12 block h-5 w-6 bg-brand [clip-path:polygon(0_0,100%_0,50%_100%)] md:mt-16 md:h-6 md:w-7"
+          />
         </div>
-      </div>
-    </section>
+      </section>
+
+      {/* ===== エンジニアとして大切にしていること ===== */}
+      <section
+        id="message"
+        aria-label="大切にしていること"
+        className="px-5 py-24 md:px-16 md:py-40"
+      >
+        <FadeIn className="mx-auto max-w-3xl text-center">
+          <p className="text-base leading-loose tracking-wide text-ink md:text-xl md:leading-loose">
+            {MESSAGE_LINES.map((line) => (
+              <span key={line} className="block">
+                {line}
+              </span>
+            ))}
+          </p>
+        </FadeIn>
+      </section>
+    </>
   )
 }

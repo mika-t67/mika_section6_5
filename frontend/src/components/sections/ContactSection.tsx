@@ -1,31 +1,27 @@
-// src/components/sections/ContactSection.tsx
-
 import Link from 'next/link'
+import FadeIn from '@/components/ui/FadeIn'
 
 export default function ContactSection() {
   return (
-    <section className="relative bg-[#f4f3f0] px-6 py-24 md:px-16">
-      {/* 背景の有機的な装飾（CONTACTのみ） */}
-      <div
-        className="pointer-events-none absolute bottom-[-40px] left-[-60px] h-[320px] w-[320px] bg-stone-400/20"
-        style={{ borderRadius: '40% 60% 60% 40% / 40% 60% 40% 60%' }}
-      />
+    <section id="contact" className="px-5 py-24 md:px-16 md:py-32">
+      <div className="mx-auto max-w-4xl">
+        <FadeIn>
+          <h2 className="font-heading text-2xl font-bold tracking-tight text-brand md:text-3xl">
+            CONTACT .
+          </h2>
+        </FadeIn>
 
-      <div className="relative z-10 mx-auto max-w-xl space-y-10">
-        <div className="space-y-3">
-          <p className="text-sm tracking-[0.3em] text-stone-400 uppercase">Contact</p>
-          <h2 className="text-3xl font-light text-stone-800">お問い合わせ</h2>
-          <p className="text-sm leading-relaxed text-stone-400">
-            お仕事のご依頼・ご相談はお気軽にどうぞ。
+        <FadeIn delay={150} className="mt-10 pl-6 md:mt-12 md:pl-10">
+          <p className="text-sm tracking-wide text-navy md:text-base">
+            お問い合わせはこちらからお気軽にご連絡ください
           </p>
-        </div>
-
-        <Link
-          href="/contact"
-          className="inline-block rounded-full border border-stone-300 px-10 py-3 text-sm tracking-widest text-stone-600 transition hover:bg-stone-800 hover:text-white"
-        >
-          お問い合わせはこちら →
-        </Link>
+          <Link
+            href="/contact"
+            className="mt-8 inline-block rounded-full bg-brand px-10 py-3 text-sm font-bold tracking-wide text-white transition hover:opacity-85 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-brand md:mt-10"
+          >
+            お問い合わせはこちら →
+          </Link>
+        </FadeIn>
       </div>
     </section>
   )

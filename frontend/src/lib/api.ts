@@ -1,7 +1,10 @@
 import axios from 'axios'
+import type { Achievement } from '@/types'
 
 const api = axios.create({
   baseURL: process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001',
+  // APIが返事をしないときは10秒で諦める（呼び出し側で予備データに切り替える）
+  timeout: 10000,
 })
 
 // リクエスト前にIDトークンを付与する
@@ -59,9 +62,32 @@ export const deleteSkill = async (id: number) => {
 }
 
 // 実績
-export const getAchievements = async () => {
-  const res = await api.get('/achievements')
-  return res.data
+// APIはタグをカンマ区切りの文字列で返すので、受け取った直後に配列へそろえる
+type AchievementResponse = Omit<Achievement, 'tags'> & {
+  tags: string | string[] | null
+}
+
+const toTagArray = (tags: AchievementResponse['tags']): string[] => {
+  if (Array.isArray(tags)) return tags
+  return (tags ?? '')
+    .split(',')
+    .map((tag) => tag.trim())
+    .filter(Boolean)
+}
+
+const normalizeAchievement = (raw: AchievementResponse): Achievement => ({
+  ...raw,
+  tags: toTagArray(raw.tags),
+})
+
+export const getAchievements = async (): Promise<Achievement[]> => {
+  const res = await api.get<AchievementResponse[]>('/achievements')
+  return res.data.map(normalizeAchievement)
+}
+
+export const getAchievement = async (id: number): Promise<Achievement> => {
+  const res = await api.get<AchievementResponse>(`/achievements/${id}`)
+  return normalizeAchievement(res.data)
 }
 
 export const createAchievement = async (formData: FormData) => {

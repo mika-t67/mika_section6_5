@@ -52,8 +52,22 @@ const main = async () => {
     title: a.title,
     description: a.description,
     imageUrl: a.imageUrl ?? '',
+    imageAlt: a.imageAlt ?? null,
     tags: toTagArray(a.tags),
     ...(a.url ? { url: a.url } : {}),
+
+    // 一覧の表示用
+    device: a.device === 'mobile' ? 'mobile' : 'pc',
+    sortOrder: typeof a.sortOrder === 'number' ? a.sortOrder : 0,
+
+    // 詳細ページ用
+    devType: a.devType ?? null,
+    period: a.period ?? null,
+    role: a.role ?? null,
+    techReason: a.techReason ?? null,
+    challenge: a.challenge ?? null,
+    githubUrl: a.githubUrl ?? null,
+
     createdAt: typeof a.createdAt === 'string' ? a.createdAt.slice(0, 10) : a.createdAt,
   }))
 

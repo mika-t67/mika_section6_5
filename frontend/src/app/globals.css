@@ -1,15 +1,19 @@
 @import "tailwindcss";
 
+/* ===== 共通の変数 ===== */
 :root {
+  /* 管理画面用（従来どおり） */
   --background: #ffffff;
   --foreground: #171717;
-}
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  /* 公開側の配色 */
+  --cream: #f9f7f0;
+  --brand: #cf2025;
+  --navy: #323b60;
+  --ink: #1f1f1f;
+
+  /* 固定ヘッダーの高さ */
+  --header-h: 72px;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -19,8 +23,81 @@
   }
 }
 
+/* ===== Tailwindのテーマ ===== */
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+
+  /* bg-cream / text-brand / text-navy / text-ink などで使える */
+  --color-cream: var(--cream);
+  --color-brand: var(--brand);
+  --color-navy: var(--navy);
+  --color-ink: var(--ink);
+
+  /* font-display / font-nav / font-heading / font-body で使える（公開側のみ） */
+  --font-display: var(--font-righteous), system-ui, sans-serif;
+  --font-nav: var(--font-dm-sans), system-ui, sans-serif;
+  --font-heading: var(--font-montserrat), system-ui, sans-serif;
+  --font-body: var(--font-zen-kaku), "Hiragino Kaku Gothic ProN", "Hiragino Sans", Meiryo, sans-serif;
+}
+
+/* ===== 管理画面（従来どおり） ===== */
 body {
   background: var(--background);
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
+}
+
+/* ===== 公開側 ===== */
+.public-site {
+  background: var(--cream);
+  color: var(--ink);
+  font-family: var(--font-body);
+}
+
+/* 公開側を開いているときだけ、ページ全体を生成りにする（スクロールの端も同じ色に） */
+body:has(.public-site) {
+  background: var(--cream);
+}
+
+/* ナビからのスムーズスクロールと、固定ヘッダーに見出しが隠れないための余白 */
+html:has(.public-site) {
+  scroll-behavior: smooth;
+  scroll-padding-top: var(--header-h);
+}
+
+/* ===== ふんわり表示 ===== */
+.fade-in {
+  opacity: 0;
+  transform: translateY(24px);
+  transition:
+    opacity 0.8s ease,
+    transform 0.8s ease;
+  transition-delay: var(--fade-delay, 0ms);
+}
+
+.fade-in.is-visible {
+  opacity: 1;
+  transform: none;
+}
+
+/* JavaScriptが動かない環境では最初から表示する */
+@media (scripting: none) {
+  .fade-in {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* 「視差効果を減らす」設定の人にはアニメーションを止める */
+@media (prefers-reduced-motion: reduce) {
+  html:has(.public-site) {
+    scroll-behavior: auto;
+  }
+
+  .fade-in {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
 }
