@@ -5,10 +5,10 @@ type Props = {
   profile: Profile
 }
 
-// 仮の文章。内容が決まったら差し替える
+// エンジニアとして大切にしていること
 const MESSAGE_LINES = [
-  '目の前の人の「困った」に気づき、',
-  '仕組みで解決できるエンジニアを目指しています。',
+  '話を聴くことから、ものづくりを始める。',
+  '本当に必要なものを、使う人と一緒に形にしていきます。',
 ]
 
 export default function HeroSection({ profile }: Props) {
